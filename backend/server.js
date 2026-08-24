@@ -111,10 +111,18 @@ mongoose.connect(mongoURI)
   .then(async () => {
     console.log('Successfully connected to MongoDB.');
     await seedMockData();
-    app.listen(PORT, () => {
-      console.log(`Server is running on port ${PORT}`);
-    });
   })
   .catch((err) => {
     console.error('MongoDB connection error:', err);
   });
+
+// Export the Express API for Vercel Serverless Functions
+module.exports = app;
+
+// Only start the server locally (Vercel will handle the routing natively)
+if (process.env.NODE_ENV !== 'production' && !process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
+
